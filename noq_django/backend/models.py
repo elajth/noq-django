@@ -30,7 +30,10 @@ class Region(models.Model):
 
 
 class Requirement(models.Model):
-    description = models.CharField(max_length=32)
+    description = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.description
 
 
 class ClientRequirement(models.Model):

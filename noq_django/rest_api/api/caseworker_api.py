@@ -332,16 +332,47 @@ def get_user_information(request, user_id: int):
         region=client.region.id if client.region else None, 
         country=client.country,
         day_of_birth=client.day_of_birth.isoformat() if client.day_of_birth else None,
-        personnr_lastnr=client.personnr_lastnr
+        requirements=client.requirements,
+        unokod=client.unokod,
+        # personnr_lastnr=client.personnr_lastnr
     )
 
     return user_data
+
+""" 
+Get information about USERS 
+"""
+@router.get("/users", response=List[UserInfoSchema], tags=["caseworker-user-management"])
+def get_all_users(request):
+    clients= Client.objects.all()
+    user_data_list = [
+        UserInfoSchema(
+            first_name=client.first_name,
+            last_name=client.last_name,
+            email=client.email,
+            username=client.user.username,
+            phone=client.phone,
+            gender=client.gender,
+            street=client.street,
+            postcode=client.postcode,
+            city=client.city,
+            region=client.region.id if client.region else None, 
+            country=client.country,
+            day_of_birth=client.day_of_birth.isoformat() if client.day_of_birth else None,
+            requirements=client.requirements,
+            unokod=client.unokod,
+        )
+        for client in clients
+    ]
+
+    return user_data_list
+
 
 
 """
 Register a new user and client in the system.
 """
-@router.post("/register", response={201: dict, 400: dict}, tags=["caseworker-user-management"])
+@router.post("/user/register", response={201: dict, 400: dict}, tags=["caseworker-user-management"])
 def register_user(request, user_data: UserInfoSchema):
 
     if not user_data.email or not user_data.email.strip():
@@ -391,7 +422,9 @@ def register_user(request, user_data: UserInfoSchema):
                 city=user_data.city,
                 country=user_data.country,
                 day_of_birth=user_data.day_of_birth,
-                personnr_lastnr=user_data.personnr_lastnr or "",
+                requirements= user_data.requirements,
+                unokod= user_data.unokod,
+                # personnr_lastnr=user_data.personnr_lastnr or "",
             )
 
             user.save()
@@ -463,7 +496,9 @@ def update_user(request, user_id: int, payload: UserInfoSchema):
             'country': payload.country,
             'region_id': payload.region,
             'day_of_birth': payload.day_of_birth,
-            'personnr_lastnr': payload.personnr_lastnr
+            'requirements': payload.requirements,
+            'unokod': payload.unokod,
+            # 'personnr_lastnr': payload.personnr_lastnr
         }
 
         # Using transaction.atomic to ensure all updates happen in a single transaction

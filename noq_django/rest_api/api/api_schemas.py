@@ -32,8 +32,8 @@ class ClientSchema(ModelSchema):
         model = Client
         exclude =\
             ["user", "gender", "street", "postcode", "city", "country",
-             "phone", "email", "day_of_birth", "personnr_lastnr",
-             "region", "requirements", "last_edit", "flag"]
+             "phone", "email", "day_of_birth",
+             "region", "requirements", "unokod", "last_edit", "flag"]
 
 
 class RegionSchema(ModelSchema):
@@ -84,7 +84,9 @@ class UserInfoSchema(Schema):
     country: str
     region: int  # ID för region
     day_of_birth: Optional[date] = None
-    personnr_lastnr: Optional[str] = None
+    # personnr_lastnr: Optional[str] = None
+    unokod: Optional[str] = None
+    requirements: Optional[str] = None
 
 class UserPostSchema(Schema):
     """
@@ -233,9 +235,8 @@ class BookingUpdateSchema(Schema):
     booking_id: int
 
 
-class BookingUpdateSchema(Schema):
-    booking_id: int
-
+""" class BookingUpdateSchema(Schema):
+    booking_id: int """
 
 class AvailableSchema(Schema):
     """
